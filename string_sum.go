@@ -2,6 +2,9 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -10,6 +13,8 @@ var (
 	errorEmptyInput = errors.New("input is empty")
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
+	plusSymbol          = "+"
+	minusSymbol         = "-"
 )
 
 // Implement a function that computes the sum of two int numbers written as a string
@@ -23,5 +28,58 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	input = strings.TrimSpace(input)
+
+	var sum = 0
+	i := 0
+	var value = ""
+
+	if len(input) == 0 {
+		return "", errorEmptyInput
+	}
+
+	for _, r := range input {
+		if i > 2 {
+			return "", errorNotTwoOperands
+		}
+
+		if r == '+' || r == '-' {
+			if len(value) == 0 {
+				value += string(r)
+				continue
+			} else {
+				numValue, err := CheckValueISInteger(value) // check if integer
+
+				if err != nil {
+					return "", err
+				}
+				sum += numValue
+				value = string(r)
+				i++
+			}
+		} else {
+			if len(value) != 0 {
+				value += string(r)
+			} else {
+				value = string(r)
+			}
+		}
+	}
+
+	numValue, err := CheckValueISInteger(value) // check if integer
+
+	if err != nil {
+		return "", err
+	}
+	sum += numValue
+
+	return string(sum), nil
+}
+
+func CheckValueISInteger(input string) (int, error) {
+	value, err := strconv.Atoi(input)
+	if err != nil {
+		return value, fmt.Errorf("incorrect value(s) are provided errors: %s", err)
+	}
+	return value, nil
 }
