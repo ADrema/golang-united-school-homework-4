@@ -42,13 +42,14 @@ func StringSum(input string) (output string, err error) {
 	for i := 0; i < runesLength; i++ {
 		runeValue := runes[i]
 		stringValue := string(runeValue)
-		isLast := (i+1 == runesLength)
+		isLast := i+1 == runesLength
+		isOperator := runeValue == '+' || runeValue == '-'
 
 		if counter > 2 {
 			return "", errorNotTwoOperands
 		}
 
-		if ((runeValue == '+' || runeValue == '-') && len(value) != 0) || isLast {
+		if (isOperator && len(value) != 0) || isLast {
 			if isLast {
 				value = symbol + value + stringValue
 			} else {
@@ -62,11 +63,13 @@ func StringSum(input string) (output string, err error) {
 			value = ""
 			symbol = stringValue
 			counter++
-		} else if runeValue == '+' || runeValue == '-' {
-			symbol = stringValue
-		} else {
-			value += stringValue
+			continue
 		}
+		if isOperator {
+			symbol = stringValue
+			continue
+		}
+		value += stringValue
 	}
 
 	return string(sum), nil
