@@ -13,8 +13,6 @@ var (
 	errorEmptyInput = errors.New("input is empty")
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
-	plusSymbol          = "+"
-	minusSymbol         = "-"
 )
 
 // Implement a function that computes the sum of two int numbers written as a string
@@ -28,50 +26,48 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	input = strings.TrimSpace(input)
-
-	var sum = 0
-	i := 0
-	var value = ""
+	input = strings.ReplaceAll(input, " ", "")
 
 	if len(input) == 0 {
 		return "", errorEmptyInput
 	}
+	sum := 0
+	counter := 0
+	value := ""
+	symbol := "+"
 
-	for _, r := range input {
-		if i > 2 {
+	runes := []rune(input)
+	runesLength := len(runes)
+
+	for i := 0; i < runesLength; i++ {
+		runeValue := runes[i]
+		stringValue := string(runeValue)
+		isLast := (i+1 == runesLength)
+
+		if counter > 2 {
 			return "", errorNotTwoOperands
 		}
 
-		if r == '+' || r == '-' {
-			if len(value) == 0 {
-				value += string(r)
-				continue
+		if ((runeValue == '+' || runeValue == '-') && len(value) != 0) || isLast {
+			if isLast {
+				value = symbol + value + stringValue
 			} else {
-				numValue, err := CheckValueISInteger(value) // check if integer
-
-				if err != nil {
-					return "", err
-				}
-				sum += numValue
-				value = string(r)
-				i++
+				value = symbol + value
 			}
+			numValue, err := CheckValueISInteger(value) // check if integer
+			if err != nil {
+				return "", err
+			}
+			sum += numValue
+			value = ""
+			symbol = stringValue
+			counter++
+		} else if runeValue == '+' || runeValue == '-' {
+			symbol = stringValue
 		} else {
-			if len(value) != 0 {
-				value += string(r)
-			} else {
-				value = string(r)
-			}
+			value += stringValue
 		}
 	}
-
-	numValue, err := CheckValueISInteger(value) // check if integer
-
-	if err != nil {
-		return "", err
-	}
-	sum += numValue
 
 	return string(sum), nil
 }
@@ -79,7 +75,7 @@ func StringSum(input string) (output string, err error) {
 func CheckValueISInteger(input string) (int, error) {
 	value, err := strconv.Atoi(input)
 	if err != nil {
-		return value, fmt.Errorf("incorrect value(s) are provided errors: %s", err)
+		return 0, fmt.Errorf("incorrect value(s) are provided errors: %s", err)
 	}
 	return value, nil
 }
