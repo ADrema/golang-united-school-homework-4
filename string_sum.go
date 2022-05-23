@@ -48,7 +48,7 @@ func StringSum(input string) (output string, err error) {
 		isOperator := runeValue == '+' || runeValue == '-'
 
 		if counter == 2 {
-			return "", errorNotTwoOperands
+			return "", fmt.Errorf("invalid expression: %s", errorNotTwoOperands)
 		}
 
 		if i == 0 {
@@ -71,11 +71,16 @@ func StringSum(input string) (output string, err error) {
 		value += stringValue
 	}
 
+	if counter == 0 {
+		return "", fmt.Errorf("invalid expression: %s", errorNotTwoOperands)
+	}
+
 	valueOne, err1 := CheckValueISInteger(firstValue)  // check if integer
 	valueTwo, err2 := CheckValueISInteger(secondValue) // check if integer
 
 	if err1 != nil || err2 != nil {
-		return "", fmt.Errorf("incorrect value(s) are provided errors: %s, %s", err1, err2)
+		return "", fmt.Errorf("incorrect value(s) are provided errors: %s, %s",
+			strconv.NumError{Err: err1}, strconv.NumError{Err: err2})
 	}
 	sum = valueOne + valueTwo
 	output = strconv.Itoa(sum)
