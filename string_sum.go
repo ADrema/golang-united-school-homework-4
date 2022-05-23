@@ -78,7 +78,8 @@ func StringSum(input string) (output string, err error) {
 		return "", fmt.Errorf("incorrect value(s) are provided errors: %s, %s", err1, err2)
 	}
 	sum = valueOne + valueTwo
-	return string(sum), nil
+	output = strconv.Itoa(sum)
+	return output, nil
 }
 
 func CheckValueISInteger(input string) (int, error) {
