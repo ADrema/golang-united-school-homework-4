@@ -13,6 +13,7 @@ var (
 	errorEmptyInput = errors.New("input is empty")
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
+	invalidExpression   = "invalid expression: %s"
 )
 
 // Implement a function that computes the sum of two int numbers written as a string
@@ -29,7 +30,7 @@ func StringSum(input string) (output string, err error) {
 	input = strings.ReplaceAll(input, " ", "")
 
 	if len(input) == 0 {
-		return "", fmt.Errorf("invalid expression: %s", errorEmptyInput)
+		return "", fmt.Errorf(errorEmptyInput.Error())
 	}
 	sum := 0
 	counter := 0
@@ -48,7 +49,7 @@ func StringSum(input string) (output string, err error) {
 		isOperator := runeValue == '+' || runeValue == '-'
 
 		if counter == 2 {
-			return "", fmt.Errorf("invalid expression: %s", errorNotTwoOperands)
+			return "", fmt.Errorf(invalidExpression, errorNotTwoOperands)
 		}
 
 		if i == 0 {
@@ -72,20 +73,20 @@ func StringSum(input string) (output string, err error) {
 	}
 
 	if counter == 0 {
-		return "", fmt.Errorf("invalid expression: %s", errorNotTwoOperands)
+		return "", fmt.Errorf(invalidExpression, errorNotTwoOperands)
 	}
 
-	valueOne, err1 := CheckValueISInteger(firstValue) // check if integer
+	valueOne, err := CheckValueISInteger(firstValue) // check if integer
 
-	if err1 != nil {
+	if err != nil {
 		return "", fmt.Errorf("incorrect first operand: %s",
-			strconv.NumError{Err: err1})
+			strconv.NumError{Err: err})
 	}
-	valueTwo, err2 := CheckValueISInteger(secondValue) // check if integer
+	valueTwo, err := CheckValueISInteger(secondValue) // check if integer
 
-	if err2 != nil {
+	if err != nil {
 		return "", fmt.Errorf("incorrect second operand: %s",
-			strconv.NumError{Err: err2})
+			strconv.NumError{Err: err})
 	}
 
 	sum = valueOne + valueTwo
