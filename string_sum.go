@@ -75,13 +75,19 @@ func StringSum(input string) (output string, err error) {
 		return "", fmt.Errorf("invalid expression: %s", errorNotTwoOperands)
 	}
 
-	valueOne, err1 := CheckValueISInteger(firstValue)  // check if integer
+	valueOne, err1 := CheckValueISInteger(firstValue) // check if integer
+
+	if err1 != nil {
+		return "", fmt.Errorf("incorrect first operand: %s",
+			strconv.NumError{Err: err1})
+	}
 	valueTwo, err2 := CheckValueISInteger(secondValue) // check if integer
 
-	if err1 != nil || err2 != nil {
-		return "", fmt.Errorf("incorrect value(s) are provided errors: %s, %s",
-			strconv.NumError{Err: err1}, strconv.NumError{Err: err2})
+	if err2 != nil {
+		return "", fmt.Errorf("incorrect second operand: %s",
+			strconv.NumError{Err: err2})
 	}
+
 	sum = valueOne + valueTwo
 	output = strconv.Itoa(sum)
 	return output, nil
