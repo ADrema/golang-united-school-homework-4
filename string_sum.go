@@ -34,7 +34,9 @@ func StringSum(input string) (output string, err error) {
 	sum := 0
 	counter := 0
 	value := ""
-	symbol := "+"
+	symbol := ""
+	var firstValue string
+	var secondValue string
 
 	runes := []rune(input)
 	runesLength := len(runes)
@@ -49,36 +51,40 @@ func StringSum(input string) (output string, err error) {
 			return "", errorNotTwoOperands
 		}
 
-		if (isOperator && len(value) != 0) || isLast {
-			if isLast {
-				value = symbol + value + stringValue
-			} else {
-				value = symbol + value
-			}
-			numValue, err := CheckValueISInteger(value) // check if integer
-			if err != nil {
-				return "", err
-			}
-			sum += numValue
+		if i == 0 {
+			value = stringValue
+			continue
+		}
+
+		if isLast {
+			secondValue = symbol + value + stringValue
+			continue
+		}
+
+		if isOperator && len(value) != 0 {
+			firstValue = symbol + value
 			value = ""
 			symbol = stringValue
 			counter++
 			continue
 		}
-		if isOperator {
-			symbol = stringValue
-			continue
-		}
 		value += stringValue
 	}
 
+	valueOne, err1 := CheckValueISInteger(firstValue)  // check if integer
+	valueTwo, err2 := CheckValueISInteger(secondValue) // check if integer
+
+	if err1 != nil || err2 != nil {
+		return "", fmt.Errorf("incorrect value(s) are provided errors: %s, %s", err1, err2)
+	}
+	sum = valueOne + valueTwo
 	return string(sum), nil
 }
 
 func CheckValueISInteger(input string) (int, error) {
 	value, err := strconv.Atoi(input)
 	if err != nil {
-		return 0, fmt.Errorf("incorrect value(s) are provided errors: %s", err)
+		return 0, err
 	}
 	return value, nil
 }
