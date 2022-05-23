@@ -29,7 +29,7 @@ func StringSum(input string) (output string, err error) {
 	input = strings.ReplaceAll(input, " ", "")
 
 	if len(input) == 0 {
-		return "", errorEmptyInput
+		return "", fmt.Errorf("invalid expression: %s", errorEmptyInput)
 	}
 	sum := 0
 	counter := 0
