@@ -13,7 +13,7 @@ var (
 	errorEmptyInput = errors.New("input is empty")
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
-	invalidExpression   = "invalid expression: %s"
+	invalidExpression   = "invalid expression: %w"
 )
 
 // Implement a function that computes the sum of two int numbers written as a string
@@ -30,7 +30,7 @@ func StringSum(input string) (output string, err error) {
 	input = strings.ReplaceAll(input, " ", "")
 
 	if len(input) == 0 {
-		return "", fmt.Errorf(errorEmptyInput.Error())
+		return "", fmt.Errorf(invalidExpression, errorEmptyInput)
 	}
 	sum := 0
 	counter := 0
