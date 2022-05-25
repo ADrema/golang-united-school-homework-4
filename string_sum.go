@@ -79,13 +79,13 @@ func StringSum(input string) (output string, err error) {
 	valueOne, err := CheckValueISInteger(firstValue) // check if integer
 
 	if err != nil {
-		return "", fmt.Errorf("incorrect first operand: %s",
+		return "", fmt.Errorf("incorrect first operand: %w",
 			strconv.NumError{Err: err})
 	}
 	valueTwo, err := CheckValueISInteger(secondValue) // check if integer
 
 	if err != nil {
-		return "", fmt.Errorf("incorrect second operand: %s",
+		return "", fmt.Errorf("incorrect second operand: %w",
 			strconv.NumError{Err: err})
 	}
 
